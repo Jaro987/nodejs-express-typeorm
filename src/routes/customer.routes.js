@@ -1,41 +1,41 @@
 module.exports = app => {
     const customers = require("../controllers/customer.controller");
   
-    // var VerifyToken = require('../../auth/VerifyToken');
+    var VerifyToken = require('../auth/VerifyToken');
   
     app.post(
         "/customers",
-        // VerifyToken,
+        VerifyToken,
         customers.create
     );
   
     app.get(
         "/customers",
-        // VerifyToken,
+        VerifyToken,
         customers.findAll
     );
   
     app.get(
         "/customers/:customerId",
-        // VerifyToken,
-        customers.findOne
+        VerifyToken,
+        customers.findCustomerById
     );
   
     app.put(
         "/customers/:customerId",
-        // VerifyToken,
+        VerifyToken,
         customers.update
     );
   
     app.delete(
         "/customers/:customerId",
-        // VerifyToken,
+        VerifyToken,
         customers.delete
     );
   
     app.delete(
         "/customers",
-        // VerifyToken,
+        VerifyToken,
         customers.deleteAll
     );
   };

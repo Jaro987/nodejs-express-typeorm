@@ -1,9 +1,9 @@
 const Customer = require("../entity/customerSchema");
-const Connection = require("typeorm");
+const DB = require("typeorm");
 
-// create typeorm connection
+
 let customerRepository = null;
-Connection.createConnection().then(connection => {
+DB.createConnection().then(connection => {
     customerRepository = connection.getRepository(Customer);
 });
 
@@ -23,8 +23,7 @@ exports.findAll = async (req, res) => {
     res.json(customers);
 };
 
-exports.findOne = async (req, res) => {
-// console.log(req.params);
+exports.findCustomerById = async (req, res) => {
     let result = null;
     result = await customerRepository.findOne(req.params.customerId);
     if (result === undefined){
@@ -32,24 +31,21 @@ exports.findOne = async (req, res) => {
             message: `Not found Customer with id ${req.params.customerId}.`
           });
     }
-    console.log(typeof result);
     return res.send(result);
 };
 
 exports.update = async (req, res) => {
-    console.log(req.body);
-//   if (!req.body) {
-//     res.status(400).send({
-//       message: "Content can not be empty!"
-//     });
-//   }
-  console.log(req.params);
+  if (!req.body) {
+    res.status(400).send({
+      message: "Content can not be empty!"
+    });
+  } else {
     const customer = await customerRepository.findOne(req.params.customerId);
-    customerRepository.merge(customer, req.body);
-    const result = await customerRepository.save(customer);
+    const updatedCustomer = customerRepository.merge(customer, req.body);
+    const result = await customerRepository.save(updatedCustomer);
     return res.send(result);
+  }
 };
-
 
 exports.delete = async (req, res) => {
     const results = await customerRepository.delete(req.params.customerId);
